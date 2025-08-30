@@ -1,4 +1,4 @@
-#define led 13
+#define led 12
 #define de 2000
 /** Manchester Coding:
 *** First two bits indicate if the byte is redundant or not
@@ -10,13 +10,11 @@
 */
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(led, OUTPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   Serial.println("What's Your message?:");
   while (Serial.available() == 0) {}
   String message = Serial.readString();
@@ -59,7 +57,7 @@ void loop() {
       digitalWrite(led, LOW);
       delayMicroseconds(de);
       digitalWrite(led, HIGH);
-      delay(10); // Decrease to increase speed
+      delay(100); // Decrease to increase speed
     }
     Serial.println();
   }
