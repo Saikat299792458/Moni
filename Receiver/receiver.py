@@ -15,8 +15,8 @@ class receiver:
         self.flag = False
         self.counter = 0
         self.data = None # Frame containing information
-        self.width = 30
-        self.shutter_loss = 15 # Pixel loss due to frame transitioning
+        self.width = 28
+        self.shutter_loss = 5 # Pixel loss due to frame transitioning
         self.frame_width = 640
         self.frame_height = 480
     
@@ -78,6 +78,7 @@ class receiver:
         init = None
         for contour in reversed(contours):
             x, y, w, h = cv2.boundingRect(contour)
+            #print(y, h)
             if init:
                 white_width = y - init
                 if self.data.shape[0] // init != self.data.shape[0] // y:
@@ -86,11 +87,11 @@ class receiver:
             init = y + h
             if y:
                 if self.data.shape[0] // y != self.data.shape[0] // init:
+                    print(f"Inconsistent {h}")
                     h += self.shutter_loss
             self.transfer(h, "0")
-        #print("")
-    
-    
+
+
     def parallel(self) -> None:
         "Executes processing operations in parallel"
         ROI_left = self.frame_width // 2 - 25
@@ -120,6 +121,7 @@ class receiver:
                 if self.data is not None:
                     #print(self.q.qsize())
                     self.convert()
+                    #return
                     #print(self.q.qsize())
                     self.data = None
                     self.callback(self.stream)

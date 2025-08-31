@@ -8,7 +8,8 @@ def main() -> None:
     "Just read frame and feed to queue"
     instance = unipolar()
     object = receiver(callback=instance.manchester)
-    cap = cv2.VideoCapture(0) # Live video feed here @ 1 (0 for moni)
+    #cap = cv2.VideoCapture(0) # Live video feed here @ 1 (0 for moni)
+    cap = cv2.VideoCapture("../Videos/1us.mp4")
     print("Camera Opened.")
     #time.sleep(3)
     print("Here we go...")
