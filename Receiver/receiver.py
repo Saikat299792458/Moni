@@ -15,8 +15,9 @@ class receiver:
         self.flag = False
         self.counter = 0
         self.data = None # Frame containing information
-        self.width = 28
-        self.shutter_loss = 5 # Pixel loss due to frame transitioning
+        self.dark_width = 49
+        self.white_width = 71
+        self.shutter_loss = 7 # Pixel loss due to frame transitioning
         self.frame_width = 640
         self.frame_height = 480
     
@@ -63,7 +64,8 @@ class receiver:
     def transfer(self, h, type) -> None:
         "Converts height to number of bits"
         # Reduce the effective shutter loss value
-        no = round(h / self.width)
+        width = self.dark_width if type == "0" else self.white_width
+        no = round(h / width)
         if not no:
             no = 1
         self.stream += type*no
@@ -72,7 +74,7 @@ class receiver:
     def convert(self) -> None:
         "Retrieves Binary data from B&W image"
         # Apply binary threshold to segment black strips
-        _, binary_image = cv2.threshold(self.data, 50, 250, cv2.THRESH_BINARY_INV) # Calibrate here
+        _, binary_image = cv2.threshold(self.data, 50, 255, cv2.THRESH_BINARY_INV) # Calibrate here
         # Find contours in the binary image
         contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         init = None
@@ -83,12 +85,14 @@ class receiver:
                 white_width = y - init
                 if self.data.shape[0] // init != self.data.shape[0] // y:
                     white_width += self.shutter_loss # at the end of 1 frame
+                #print(f"W{white_width}", end=" ")
                 self.transfer(white_width, "1")
             init = y + h
             if y:
                 if self.data.shape[0] // y != self.data.shape[0] // init:
-                    print(f"Inconsistent {h}")
+                    #print(f"IcB{h}", end=" ")
                     h += self.shutter_loss
+            #print(f"B{h}", end=" ")
             self.transfer(h, "0")
 
 

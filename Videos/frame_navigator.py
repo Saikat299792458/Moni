@@ -4,26 +4,25 @@ import os
 
 def find_smallest_black_strip_width(frame):
     # Crop to central vertical region (ROI)
-    frame_height, frame_width = frame.shape[:2]
+    frame_height, frame_width = 480, 640
     ROI_left = frame_width // 2 - 25
     ROI_right = frame_width // 2 + 25
+    frame = cv2.resize(frame, (frame_width, frame_height))
     roi = frame[:, ROI_left:ROI_right]
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     # Use a calibrated threshold for black strips
     _, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY_INV)
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     heights = []
-    for cnt in contours:
+    init = None
+    for cnt in reversed(contours):
         x, y, w, h = cv2.boundingRect(cnt)
-        # Filter out small noise, only consider strips with reasonable height
-        if h > 5 and w > 10:
-            heights.append(h)
+        if init:
+            wh = y - init
+            heights.append(f"W{wh}")
+        init = y + h
+        heights.append(f"B{h}")
     print(f"Detected strip heights: {heights}")
-    if heights:
-        min_height = min(heights)
-        print(f"Smallest black strip height: {min_height} pixels")
-    else:
-        print("No black strips detected.")
 
 # Set paths
 video_path = "1us.mp4"  # Change to your desired video file

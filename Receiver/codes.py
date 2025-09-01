@@ -6,6 +6,20 @@ class unipolar:
         The data is preceded by one low (0) bit and succeded by one low (0) bit
         for the sake of synchronization
         Data must be therefore of 18 characters long in total."""
+        #print(data)
+        clean = ""
+        count = 1
+        for i in range(1, len(data)):
+            if data[i] == data[i-1]:
+                count += 1
+            else:
+                count = 1
+            if count <= 2:
+                clean += data[i]
+        data = data[0] + clean  # Ensure the first character is included
+        #print(data)
+
+
         if len(data) != 18 or data[0] != "0" or data[-1] != "0":
             #print("<!>", end="", flush=True) # Invalid Byte
             return
@@ -23,6 +37,7 @@ class unipolar:
         except Exception as e:
             print(e)
             return
+        print(byte)
         char = chr(int(byte, 2))
         if char != self.prev:
             print(char, end="", flush=True)
