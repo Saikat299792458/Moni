@@ -25,7 +25,7 @@ def find_smallest_black_strip_width(frame):
     print(f"Detected strip heights: {heights}")
 
 # Set paths
-video_path = "1us.mp4"  # Change to your desired video file
+video_path = "new2.mp4"  # Change to your desired video file
 snaps_dir = "Snaps"
 
 # Create Snaps directory if it doesn't exist

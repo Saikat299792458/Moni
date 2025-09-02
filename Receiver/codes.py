@@ -37,7 +37,6 @@ class unipolar:
         except Exception as e:
             print(e)
             return
-        print(byte)
         char = chr(int(byte, 2))
         if char != self.prev:
             print(char, end="", flush=True)

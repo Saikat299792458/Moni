@@ -15,8 +15,8 @@ class receiver:
         self.flag = False
         self.counter = 0
         self.data = None # Frame containing information
-        self.dark_width = 49
-        self.white_width = 71
+        self.dark_width = 27
+        self.white_width = 33
         self.shutter_loss = 7 # Pixel loss due to frame transitioning
         self.frame_width = 640
         self.frame_height = 480
